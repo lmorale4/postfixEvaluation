@@ -4,18 +4,20 @@
 using namespace std;
 
 Stack::Stack(){
-  head;
+  head = NULL;
   stackSize = 0;
 }
 
 Stack::~Stack(){
-  cout << "Stack object is being destroyed."<< endl;
-  Node * temp;
-  for(int i=0; i<stackSize; i++){
-    temp = head;
-    head = head->next;
-    delete temp;
-  }
+  // cout << "Stack object is being destroyed."<< endl;
+	if(!empty()){
+		Node * temp = NULL;
+		for(int i=0; i<stackSize; i++){
+			temp = head;
+			head = head->next;
+			delete temp;
+		}
+	}
 }
 
 int Stack::size() const{

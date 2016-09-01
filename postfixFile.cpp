@@ -20,26 +20,15 @@ void enqueueTokens(string line, Queue& q);
 // output: none
 // side effects; enqueues tokens in line to the Queue
 
-void evaluatePostfix(Queue& q, Stack& s);
+int evaluatePostfix(Queue& q, Stack& s);
 // input: a Queue and a Stack
 // output: none
 // side effects;
 
-void writeToFile(ofstream& r,string line, Stack& s);
+void writeToFile(ofstream& r,string line, int result);
 // input: a file to write in, a string and a Stack
 // output: none
 // side effects; writes items in stack to a file
- 
-string charToStr(char c);
-// input: a char
-// output: a string
-// side effects: converts a char into a string
-
-int stringToInt(string str);
-// input: a string
-// output: an int
-// side effects: converts a string to an int
-
 
 int main(){
   //string userStr;
@@ -65,8 +54,8 @@ void iterateThroughFile(ifstream& uFile){
         Queue q;
         Stack s;
         enqueueTokens(line, q);
-        evaluatePostfix(q, s);
-        writeToFile(result, line, s);
+        int eval = evaluatePostfix(q, s);
+        writeToFile(result, line, eval);
       }
     }
   }
@@ -76,25 +65,24 @@ void iterateThroughFile(ifstream& uFile){
 }
 
 void enqueueTokens(string line, Queue& q){
-  string str;
-  for(int i=0; i<line.length(); i++){
-    if(line[i] != ' '){
-        str += line[i];
-    }
-    else{
-        q.enqueue(str);
-        str = "";
-    }
-  }
+	string item;
+	istringstream s(line);
+	
+	while(s){
+		s >> item;
+		if(item != "#"){
+			q.enqueue(item);
+		}
+	}
 }
 
-void evaluatePostfix(Queue& q, Stack& s){
+int evaluatePostfix(Queue& q, Stack& s){
   int sz = q.size();
   for(int i=0; i<sz; i++){
     string token = q.front();
     q.dequeue();
     if(isdigit(token[0])){
-      int num = stringToInt(token);
+      int num = stoi(token);
       s.push(num);
     }
     else{
@@ -119,31 +107,20 @@ void evaluatePostfix(Queue& q, Stack& s){
         s.push(result);
     }
   }
+	return s.pop();
 }
 
-void writeToFile(ofstream& r,string line, Stack& s){
-  string postfix;
-  for(int i=0; i<line.length(); i++){
-    if(charToStr(line[i]).compare("#")!= 0){
-      postfix += charToStr(line[i]);
-    }
-  }
-  r << "The postfix expression, "<< postfix << " was evaluated to be "<< s.pop()<<"\n";
+void writeToFile(ofstream& r,string line, int result){
+	istringstream iss(line);
+	string postfix;
+	string item;
+	
+	while(iss){
+		iss >> item;
+		if(item != "#"){
+			postfix += item + " ";
+		}
+	}
+	
+	r << "The postfix expression, "<< postfix << " was evaluated to be "<< result<<"\n";
 }
-
-string charToStr(char c){
-  stringstream ss;
-  string str;
-  ss << c;
-  ss >> str;
-  return str;
-}
-
-int stringToInt(string str){
-   stringstream ss;
-   int num;
-   ss << str;
-   ss >> num;
-   return num;
-}
-

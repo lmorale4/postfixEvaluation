@@ -2,19 +2,21 @@
 using namespace std;
 
 Queue::Queue(){
-  head;
-  last;
+  head = NULL;
+  last = NULL;
   qSize = 0;
 }
 
 Queue::~Queue(){
-  cout << "Queue object is being destroyed."<< endl;
-  Node * temp = head;
-  for(int i=0; i<qSize; i++){
-    head = head->next;
-    delete temp;
-    temp = head;
-  }
+  // cout << "Queue object is being destroyed."<< endl;
+	if(!empty()){
+		Node * temp = head;
+		for(int i=0; i<qSize; i++){
+			head = head->next;
+			delete temp;
+			temp = head;
+		}
+	}
 }
 
 int Queue::size() const{
