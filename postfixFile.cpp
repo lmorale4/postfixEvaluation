@@ -58,6 +58,7 @@ void iterateThroughFile(ifstream& uFile){
         writeToFile(result, line, eval);
       }
     }
+		result.close();
   }
   else{
     cout << "The file was not opened properly" << endl;
